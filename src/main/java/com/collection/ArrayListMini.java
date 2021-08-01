@@ -86,6 +86,11 @@ public class ArrayListMini<E> extends AbstractListMini<E> implements ListMini<E>
         }
     }
 
+    //额外增加的方法，获取存储空间大小
+    public int getCapacitySize() {
+        return elementData.length;
+    }
+
     private static int calculateCapacity(Object[] elementData, int minCapacity) {
         if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             return Math.max(DEFAULT_CAPACITY, minCapacity);
@@ -109,6 +114,7 @@ public class ArrayListMini<E> extends AbstractListMini<E> implements ListMini<E>
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     //增加容量以确保它至少可以容纳由最小容量参数指定的元素数量。
+    //集合第一次add元素时，会扩容，这时会比较 0*1.5 和10 的大小
     private void grow(int minCapacity) {
         // 未扩容前的存储空间大小
         int oldCapacity = elementData.length;
