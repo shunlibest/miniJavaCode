@@ -29,6 +29,7 @@ class ArrayListMiniTest {
     @Test
     void size() throws NoSuchFieldException, IllegalAccessException {
         initValues(11);
+        arrayListMini.clear();
         System.out.print("arrayListMini元素个数 " + arrayListMini.size());
         System.out.println("arrayListMini存储空间为 " + arrayListMini.getCapacitySize());
         System.out.print("arrayList元素个数 " + arrayList.size());
