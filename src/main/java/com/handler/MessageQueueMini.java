@@ -23,23 +23,24 @@ public class MessageQueueMini {
     @SuppressWarnings("unused")
     private int mPtr; // used by native code
 
-    private native void nativeInit();
-
-    private native void nativeDestroy();
-
-    private native void nativePollOnce(int ptr, int timeoutMillis);
-
-    private native void nativeWake(int ptr);
+//    private native void nativeInit();
+//
+//    private native void nativeDestroy();
+//
+//    private native void nativePollOnce(int ptr, int timeoutMillis);
+//
+//    private native void nativeWake(int ptr);
 
 
     MessageQueueMini() {
-        nativeInit();
+//        nativeInit();
     }
+
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            nativeDestroy();
+//            nativeDestroy();
         } finally {
             super.finalize();
         }
@@ -92,6 +93,9 @@ public class MessageQueueMini {
         }
     }
 
+    final Object 锁 = new Object();
+
+
     //第一步：发送消息，会把消息发送到队列中
     //这个方法主要是用来处理发送消息的，当Handler通过自己enqueueMessage()将消息发送到这该函数中。
     //msg:要发送的消息内容
@@ -136,17 +140,22 @@ public class MessageQueueMini {
 
                 needWake = false; // still waiting on head, no need to wake up
             }
+
+            this.notify();
         }
         // 如果looper阻塞/休眠中，则唤醒looper循环机制处理消息
-        if (needWake) {
-            nativeWake(mPtr);
-        }
+//        if (needWake) {
+////            nativeWake(mPtr);
+//
+//        }
+
+
         return true;
     }
 
 
     //获取最近收到的一条短信
-    final MessageMini next() {
+    final synchronized  MessageMini next() {
         int pendingIdleHandlerCount = -1; // -1 仅在第一次迭代期间
 
         //0，立即返回，没有阻塞；
@@ -162,7 +171,19 @@ public class MessageQueueMini {
 //                BinderMini.flushPendingCommands();
             }
             //相当于在这等待Sleep(nextPollTimeoutMillis)
-            nativePollOnce(mPtr, nextPollTimeoutMillis);
+//            nativePollOnce(mPtr, nextPollTimeoutMillis);
+//            锁
+
+//            synchronized (锁){
+                try {
+                    wait(nextPollTimeoutMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+//            }
+
+
 
             synchronized (this) {
                 // 尝试检查下一条消息。找到就返回。
