@@ -15,6 +15,9 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:21.0.1'
 
+    implementation 'org.openjdk.jol:jol-core:0.16'
+
+
 }
 
 test {
